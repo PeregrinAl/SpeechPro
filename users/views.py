@@ -44,7 +44,7 @@ class LoginView(APIView):
 
         return response
 
-class UserView(LoginView):
+class UserView(APIView):
     def get(self, request):
         token = request.COOKIES.get('jwt')
 
@@ -59,3 +59,12 @@ class UserView(LoginView):
         user = User.objects.filter(id=payload['id']).first()
         serializer = UserSerializer(user)
         return Response(serializer.data)
+    
+class LogoutView(APIView):
+    def post(self, request):
+        response = Response()
+        response.delete_cookie('jwt')
+        response.data = {
+            'message': 'success'
+        }
+        return response
